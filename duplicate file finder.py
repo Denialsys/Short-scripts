@@ -75,7 +75,6 @@ def findTheDuplicate(folder):
 ##   End of the script
 ##  \_________________/
 
-
 ##This part was added
 def findDupFNames(folder):
     '''Finds a file duplicates by filename. This is useful for image editing as
