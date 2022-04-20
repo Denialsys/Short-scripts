@@ -1,0 +1,57 @@
+**Set this parameters first, these are the credentials used in the gitlab
+git config --global user.name <whatever>
+git config --global user.password <whatever>
+git config --global user.email <whatever>
+
+
+**To add the target remote
+git remote add origin https://gitlab.com/<username>/<projectname>.git
+
+
+**To change the target remote
+git remote set-url origin https://gitlab.com/<username>/<projectname>.git
+
+
+**Update your git based from the gitlab project
+git fetch
+
+
+**If currently on the main branch, create a branch
+git branch new_test_branch
+
+
+**To remove tracking on files that was added on .gitignore
+git rm --cached <directory name>
+
+
+** get the source of the target branch
+git checkout <name of the target branch>
+
+
+**pull the update of other dev on the current branch
+git pull
+
+
+**for commiting the changes and pushing to remote repository
+git add *
+git commit -m "<whatever>"
+git push
+
+
+**switching to branch
+git fetch
+git checkout <branch>
+
+
+** prune the locally recorded remote branches
+git fetch origin --prune
+
+
+**stashing
+git stash
+git stash list
+git stash apply stash@{<index of desired stash>}
+
+
+**ignoring the revisions of a file
+git update-index --skip-worktree <target file to ignore further changes>

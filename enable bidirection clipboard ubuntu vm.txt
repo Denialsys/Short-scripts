@@ -1,0 +1,9 @@
+Step 1
+sudo apt update
+sudo apt install build-essential dkms linux-headers-$(uname -r)
+
+Step 2
+From the virtual machine menu, click Devices -> “Insert Guest Additions CD Image”
+
+STEP 3
+Restart the guest machine
