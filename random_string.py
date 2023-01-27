@@ -3,6 +3,15 @@
 import random
 
 def create_random_str(phrase_seed, salt = '', str_length = 15):
+    """
+    Create a random string using the unicode characters, initial phrase is
+    needed as seed
+
+        :param phrase_seed: Password or main secret key to serve as seed
+        :param salt: Additional string char to add to the generation of randomness
+        :param str_length: Length of string to be generated
+        :return: Phrase with random characters, with no spaces
+    """
     
     seed = create_seed(phrase_seed, salt)
     random.seed(seed)
@@ -15,8 +24,13 @@ def create_random_str(phrase_seed, salt = '', str_length = 15):
     return random_string
 
 def create_seed(phrase, salt = ''):
-    '''Create random seeds that will later be combined
-    for the randomization'''
+    """Create random seeds that will later be combined
+    for the randomization
+
+        :param phrase: Password or main secret key to serve as seed
+        :param salt: Additional string char to add to the generation of randomness
+        :return: Integer seed that will prime the randomizer function
+    """
     
     rand_upper_bound = 999
     subseed_collection = []
