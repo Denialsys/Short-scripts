@@ -4,17 +4,22 @@ import os
 
 base_dir = os.getcwd()
 extraction_path = 'Extracted'
+archival_path = 'Archived'
+
 
 def unzip_archives(
         target_path,
-        is_path_relative = True,
-        in_file_ext = '.zip',
-        out_file_ext = '.zip',
-        pwd = None):
-
+        is_path_relative=True,
+        in_file_ext='.zip',
+        out_file_ext='.zip',
+        pwd=None):
     """
     Will collect and extract all the archive file from the specified path.
     Will create a directory for the output extracted files
+
+    Example usage:
+        unzip_archives('targ\\items')
+        unzip_archives('h:\\Desktop\\test', False)
 
         :param target_path: The target location where archive files are located
                 (if nested use double slash '\\' for windows).
@@ -27,6 +32,8 @@ def unzip_archives(
         :return: None
     """
 
+    zip_list = []
+
     if is_path_relative:
         target_extraction_path = os.path.join(base_dir, target_path, extraction_path)
         zip_file_path = os.path.join(base_dir, target_path)
@@ -36,7 +43,6 @@ def unzip_archives(
 
     print(f'\nBase Directory {base_dir}')
     print(f'Target extraction path {target_extraction_path}')
-    zip_list = []
 
     # Gather the files to extract
     for fyl in os.listdir(zip_file_path):
@@ -66,6 +72,61 @@ def unzip_archives(
             else:
                 zipObj.extractall(current_zip_extraction_path)
 
+
+def zip_lambdas(
+        target_path,
+        is_path_relative=True,
+        out_file_ext='.zip'):
+    """
+    Compress the extracted lambda files, will create an archive file similar to the
+    exported archive file of AWS Lambda, the package must be a directory with
+    lambda script inside.
+
+    Example usage:
+        zip_lambdas('targ\\items\\Extracted')
+        zip_lambdas('h:\\Desktop\\test', False)
+
+        :param target_path: Target path where the directories to archive are located
+        :param is_path_relative: Meaning the target directory/s path are relative to
+                script path. If set to false, the target_path value must be absolute
+        :param out_file_ext: File format for the archive file
+        :return: None
+    """
+
+    if is_path_relative:
+        target_archival_path = os.path.join(base_dir, target_path, archival_path)
+        file_path = os.path.join(base_dir, target_path)
+    else:
+        target_archival_path = os.path.join(target_path, archival_path)
+        file_path = target_path
+
+    print(f'\nBase Directory {base_dir}')
+    print(f'Target archival path {target_archival_path}')
+
+    # Create target dir
+    if not os.path.exists(target_archival_path):
+        print(f'Creating output directory: {target_archival_path}')
+        os.makedirs(target_archival_path)
+
+    # Create each archive files
+    for root, dirs, files in os.walk(file_path):
+        if dirs:
+            continue # Wait the next traversal when target files are the root dirs
+        else:
+            lambda_package = root.split(os.sep)[-1]
+
+            # Do not include the output directory
+            if lambda_package == archival_path:
+                continue
+
+            package_path = os.path.join(target_archival_path, lambda_package)
+            print(f'Archiving contents of {package_path}')
+
+            with zipfile.ZipFile(package_path + out_file_ext, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                for file in files:
+                    zip_file.write(os.path.join(root, file), file)
+
+
 def zip_with_password():
     """
     Create a password-protected zip file for securing file
@@ -76,10 +137,11 @@ def zip_with_password():
 
 def zip_with_dynamic_password():
     """
-    Create a password-protected zip file with dynamic and random password
+    Create multiple password-protected zip files with dynamic and random password
         :return: None
     """
     pass
+
 
 def unzip_with_dynamic_password():
     """
@@ -87,26 +149,3 @@ def unzip_with_dynamic_password():
         :return: None
     """
     pass
-
-def zip_lambdas():
-    """
-    Compress the extracted lambda files
-        :return: None
-    """
-    # Create target dir
-    zip_archive = "Packaged_lambdas"
-    lambda_handler = "lambda_handler"
-
-    zip_archive_abs_path = os.path.abspath(zip_archive)
-
-    if not os.path.exists(zip_archive_abs_path):
-        os.mkdir(zip_archive_abs_path)
-
-    for file in os.listdir(base_dir):
-        test_file = os.path.abspath(file)
-        if os.path.isdir(test_file) and test_file != zip_archive_abs_path:
-            lambda_zip = zip_archive_abs_path + '/' + file
-            shutil.make_archive(lambda_zip, 'zip', test_file)
-
-# unzip_archives('targ\\items')
-# unzip_archives('h:\\Desktop\\test', False)
