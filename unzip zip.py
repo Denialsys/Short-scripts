@@ -5,15 +5,24 @@ import os
 base_dir = os.getcwd()
 extraction_path = 'Extracted'
 
-def unzip_lambdas(target_path, is_path_relative = True):
+def unzip_archives(
+        target_path,
+        is_path_relative = True,
+        in_file_ext = '.zip',
+        out_file_ext = '.zip',
+        pwd = None):
+
     """
-    Will collect and extract all the zip file from the specified path.
+    Will collect and extract all the archive file from the specified path.
     Will create a directory for the output extracted files
 
-        :param target_path: The target location where zip files are located
+        :param target_path: The target location where archive files are located
                 (if nested use double slash '\\' for windows).
-        :param is_path_relative: Meaning the zip file/s path are relative to script path
+        :param is_path_relative: Meaning the archive file/s path are relative to script path
                 If set to false, the target_path value must be absolute
+        :param in_file_ext: The input archive file extension
+        :param out_file_ext: The output archive file extension
+        :param pwd: Password in string format, Note that this password will be used to all archives
 
         :return: None
     """
@@ -29,8 +38,9 @@ def unzip_lambdas(target_path, is_path_relative = True):
     print(f'Target extraction path {target_extraction_path}')
     zip_list = []
 
+    # Gather the files to extract
     for fyl in os.listdir(zip_file_path):
-        if fyl.endswith('.zip'):
+        if fyl.endswith(in_file_ext):
             zip_list.append(os.path.join(zip_file_path, fyl))
 
     # If the target directory does not exist yet
@@ -45,15 +55,44 @@ def unzip_lambdas(target_path, is_path_relative = True):
     for fyl in zip_list:
         print(f'Extracting: {fyl}')
 
-        zip_filename = fyl.split(os.sep)[-1].replace('.zip', '')
+        zip_filename = fyl.split(os.sep)[-1].replace(out_file_ext, '')
         current_zip_extraction_path = os.path.join(target_extraction_path, zip_filename)
 
         # Extract all the contents of zip file into target directory
+        # Use password if password was specified
         with zipfile.ZipFile(fyl, 'r') as zipObj:
-            zipObj.extractall(current_zip_extraction_path)
+            if pwd:
+                zipObj.extractall(current_zip_extraction_path, pwd=bytes(pwd, 'utf-8'))
+            else:
+                zipObj.extractall(current_zip_extraction_path)
+
+def zip_with_password():
+    """
+    Create a password-protected zip file for securing file
+        :return: None
+    """
+    pass
+
+
+def zip_with_dynamic_password():
+    """
+    Create a password-protected zip file with dynamic and random password
+        :return: None
+    """
+    pass
+
+def unzip_with_dynamic_password():
+    """
+    Extract archives with dynamic password
+        :return: None
+    """
+    pass
 
 def zip_lambdas():
-
+    """
+    Compress the extracted lambda files
+        :return: None
+    """
     # Create target dir
     zip_archive = "Packaged_lambdas"
     lambda_handler = "lambda_handler"
@@ -69,5 +108,5 @@ def zip_lambdas():
             lambda_zip = zip_archive_abs_path + '/' + file
             shutil.make_archive(lambda_zip, 'zip', test_file)
 
-unzip_lambdas('targ\\items')
-# unzip_lambdas('h:\\Desktop\\test', False)
+# unzip_archives('targ\\items')
+# unzip_archives('h:\\Desktop\\test', False)
