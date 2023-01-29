@@ -1,5 +1,6 @@
 import zipfile
 import os
+from dotenv import load_dotenv
 import random_string
 import subprocess
 
@@ -9,7 +10,7 @@ archival_path = 'Archived'
 archival_path_protected = 'Protected_Archive'
 
 # Load this from env file so it is hidden
-main_password = 'misha_'
+main_password = os.getenv('PASSWORD')
 
 def unzip_archives(
         target_path,
