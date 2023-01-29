@@ -157,7 +157,11 @@ def zip_with_dynamic_password(target_path, is_path_relative=True, in_file_ext='.
 
     # 7zip command, 0 - archive name, 1 - target file, 2 - password
     template_cmd = '7z\na\n{0}\n{1}\n-mx5\n-p{2}'
-    pwd_len = 35
+    cmd_special_chars = '(){}&"><|^'
+
+    # If over than 64 chars, it will be encrypted with SHA-1
+    # if so, zip file may have two correct passwords
+    pwd_len = 62
 
     # Check first if the 7z was on the system
     try:
@@ -192,6 +196,7 @@ def zip_with_dynamic_password(target_path, is_path_relative=True, in_file_ext='.
 
     for fyl in zip_list:
 
+        # Set the file name, output zip file, the password
         zip_filename = fyl.split(os.sep)[-1]
         output_zip = os.path.join(target_archival_path, zip_filename)
         dynamic_password = random_string.create_random_str(
@@ -200,11 +205,16 @@ def zip_with_dynamic_password(target_path, is_path_relative=True, in_file_ext='.
             pwd_len
         )
 
-        # Remove the command line special characters, the password becomes unusable
+        # Remove the command line special characters
+        for character in cmd_special_chars:
+            dynamic_password = dynamic_password.replace(character, '')
+
+        # Construct the command to zip file
         print(f'Creating: {output_zip}, password: {dynamic_password}')
         process_cmd = template_cmd.format(output_zip, fyl, dynamic_password)
         process_cmd = process_cmd.split('\n')
 
+        # Start the compression
         try:
             subprocess.Popen(
                 process_cmd,
