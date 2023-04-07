@@ -68,6 +68,7 @@ def save_clipboard_img(img=None):
 
 print('Starting the watchdog')
 while(is_watchdog_loop_enabled):
+    # Use functools decorator to shorten each conditions
     try:
         # Screen Capture
         if isTriggered(VK_SNAPSHOT):
