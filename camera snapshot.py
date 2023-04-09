@@ -1,87 +1,93 @@
-'''This module can be used for logging'''
-
-print("Initializing the libraries")
-from cv2 import VideoCapture, imwrite
-from time import sleep
-##from datetime import datetime
-
-import datetime
-
-# initialize the objects needed
-cam = VideoCapture(0)
-filenameAndPath = "G:\\###python script\\daily log\\%s.jpg"
-
-##x = 0
 ##
-####wait for the camera to calibrate
-##print("Calibrating sensor")
-##while (x < 5):
-##    x += 1
-##    cam.read()
-##    sleep(.3)
+##from SimpleCV import Image, Camera
 ##
+##cam = Camera()
+##img = cam.getImage()
+##img.save("filename.jpg")
+##using OpenCV:
+
+####from cv2 import *
+##from cv2 import VideoCapture, imwrite
+### initialize the camera
+##cam = VideoCapture(0)   # 0 -> index of camera
 ##s, img = cam.read()
-##day = ""
-##month = ""
-##year = ""
 ##if s:    # frame captured without any errors
-##    
-##    if datetime.now().day > 9:
-##        day = str(datetime.now().day)
+####    namedWindow("cam-test",CV_WINDOW_AUTOSIZE)
+####    imshow("cam-test",img)
+####    waitKey(0)
+####    destroyWindow("cam-test")
+##    imwrite("G:\\filename.jpg",img)
+##    cam.release()
+
+
+
+##from cv2 import VideoCapture, imwrite
+##from time import sleep
+##from os import popen
+##from datetime import datetime
+##
+### initialize the camera
+##cam = VideoCapture(0)
+##c_blnCapturing = False
+##c_blnIsTaskMgrOnline = popen('tasklist /FI "IMAGENAME eq taskmgr.exe"').read().strip().split('\n')
+##while(len(c_blnIsTaskMgrOnline) == 1):
+##
+##    s, img = cam.read()
+##    if s:    # frame captured without any errors
+##        imwrite("G:\\python script\\daily log\\filename.jpg",img)
+##
+##        ##print while we're still capturing
+##        if not c_blnCapturing:
+##            print("Rendered and written")
+##            c_blnCapturing = True
+##        
 ##    else:
-##        day = "0" + str(datetime.now().day)
+##        print("Capture failed Exiting...")
+##        break
 ##
-##    if datetime.now().month > 9:
-##        month = str(datetime.now().month)
-##    else:
-##        month = "0" + str(datetime.now().month)
+##    c_blnIsTaskMgrOnline = popen('tasklist /FI "IMAGENAME eq taskmgr.exe"').read().strip().split('\n')
+##    sleep(1)
 ##
-##    year = str(datetime.now().year)
-##    
-##    m_fileNameandPath = ("G:\\###python script\\daily log\\%s%s%s.jpg" % (year, month, day))
-##    imwrite(m_fileNameandPath,img)
-##    print("shot taken")
-##else:
-##    print("Failed to capture")
-##
-##sleep(2)
 ##cam.release()
 
-def takeSnapshot(pCamInstance, pDestination, pIsCamToBeReleased = False):
-    '''Take a camera snapshot then save it to a destination
-       As jpg file
-       Param:
-           pCamInstance -> The camera object
-           pDestination -> The destination directory as well as the filename
-                           (Format) <destination>\\<filename>%s.jpg
-           pIsCamToBeReleased -> Closes the camera object if true otherwise do nothing '''
+from cv2 import VideoCapture, imwrite
+from time import sleep
+from datetime import datetime
 
-    ##wait for the camera to auto calibrate
-    print("Calibrating the camera")
-    for tIteration in range(5):
-        
-        pCamInstance.read()
-        sleep(.3)
+# initialize the camera
+cam = VideoCapture(0)
+x = 0
 
-    retVal, capturedImage = pCamInstance.read()
+##wait for the camera to calibrate
+while (x < 5):
+    x += 1
+    cam.read()
+    sleep(.3)
+
+s, img = cam.read()
+day = ""
+month = ""
+year = ""
+if s:    # frame captured without any errors
     
-    if retVal: ##If an image was captured without errors
-
-        ##Get the system date and integrate to the filename and destination
-        ##Then save the image
-        dateCaptured = datetime.date.today().strftime("%Y%m%d")
-        filenameAndPath = ( pDestination % (dateCaptured) )
-        imwrite( filenameAndPath, capturedImage )
-        print("shot taken")
-        
+    if datetime.now().day > 9:
+        day = str(datetime.now().day)
     else:
-        
-        print("Failed to capture")
+        day = "0" + str(datetime.now().day)
 
-    ##Close the camera object
-    if pIsCamToBeReleased:
+    if datetime.now().month > 9:
+        month = str(datetime.now().month)
+    else:
+        month = "0" + str(datetime.now().month)
 
-        sleep(2)
-        pCamInstance.release()
+    year = str(datetime.now().year)
+    
+    m_fileNameandPath = ("G:\\python script\\daily log\\%s%s%s.jpg" % (year, month, day))
+    imwrite(m_fileNameandPath,img)
+    print("Mugshot taken")
+else:
+    print("Failed to capture")
 
-takeSnapshot(cam, filenameAndPath)
+sleep(2)
+cam.release()
+    
